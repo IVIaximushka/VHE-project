@@ -16,9 +16,17 @@ class Application(models.Model):
     description = models.CharField(max_length=500, default=None, verbose_name='Описание')
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Пользователь')
 
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
+
 
 class Genre(models.Model):
     title = models.CharField(max_length=15, null=False, verbose_name='Название')
+
+    class Meta:
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
 
 
 class Video(models.Model):
@@ -29,4 +37,8 @@ class Video(models.Model):
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     description = models.CharField(max_length=500, default=None, verbose_name='Описание')
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Автор')
-    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, verbose_name='Жанр')
+    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, verbose_name='Жанр')
+
+    class Meta:
+        verbose_name = 'Видео'
+        verbose_name_plural = 'Видео'
