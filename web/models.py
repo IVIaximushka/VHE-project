@@ -37,7 +37,7 @@ class Video(models.Model):
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     description = models.CharField(max_length=500, default=None, verbose_name='Описание')
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Автор')
-    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, verbose_name='Жанр')
+    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, verbose_name='Жанр')
 
     class Meta:
         verbose_name = 'Видео'
