@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проигрыватель</title>
+</head>
+<body>
+    <img class="single-video" src="{{ video.image.url }}" alt="">
+    <span class="date">{{ video.create_at }}</span>
+    <h4><a href="{% url 'video' video.id %}">{{ video.title }}</a></h4>
+    <p>{{ video.description }}</p>
+    <video
+        id="my-video"
+        controls
+        preload="auto"
+        width="1000"
+        height="800"
+        data-setup="{}">
+        <source src="{% url 'stream' video.id %}" type="video/mp4"/>
+        <source src="{% url 'stream' video.id %}" type="video/webm"/>
+    </video>
+</body>
+</html>
