@@ -1,12 +1,18 @@
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404
 
+from web.forms import RegistrationForm
 from web.models import Video
 from web.services import open_file
 
 
 def main_view(request):
     return render(request, 'web/main.html', {'video_list': Video.objects.all()})
+
+
+def registration_view(request):
+    form = RegistrationForm()
+    return render(request, 'web/registration.html', {'form': form})
 
 
 def get_video(request, id):
