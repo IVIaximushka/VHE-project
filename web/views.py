@@ -2,7 +2,7 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404
 
 from web.forms import RegistrationForm
-from web.models import Video
+from web.models import Video, User, UserProfile
 from web.services import open_file
 
 
@@ -11,8 +11,28 @@ def main_view(request):
 
 
 def registration_view(request):
+    is_success = False
     form = RegistrationForm()
-    return render(request, 'web/registration.html', {'form': form})
+    if request.method == 'POST':
+        form = RegistrationForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            user = User(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email']
+            )
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            user_profile = UserProfile(
+                user=user,
+                is_author=form.cleaned_data['author'],
+                avatar=form.cleaned_data['avatar']
+            )
+            user_profile.save()
+            is_success = True
+    return render(request, 'web/registration.html', {
+        'form': form,
+        'is_success': is_success
+    })
 
 
 def get_video(request, id):
