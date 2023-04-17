@@ -2,6 +2,8 @@ import re
 
 from django import forms
 
+from web.models import User
+
 
 class RegistrationForm(forms.Form):
     email = forms.EmailField()
@@ -24,4 +26,6 @@ class RegistrationForm(forms.Form):
                                        'должно быть от 8 до 15.')
         elif cleaned_data['password'] != cleaned_data['password2']:
             self.add_error('password2', 'Пароли не совпадают!')
+        elif User.objects.filter(username=cleaned_data['username']).exists():
+            self.add_error('username', 'Пользователь с таким именем уже существует!')
         return cleaned_data
