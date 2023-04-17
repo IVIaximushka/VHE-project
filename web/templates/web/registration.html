@@ -2,9 +2,12 @@
 
 {% block content %}
     <div class="main-posts text-center">
-        <h1>Регистрация</h1>
-        <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+        {% if is_success == True %}
+            <p><b><i>Спасибо за регистрацию!</i></b></p>
+        {% else %}
+            <h1>Регистрация</h1>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 {% for field in form %}
                     <div class="form-group">
                         {{field.label_tag}}
@@ -18,7 +21,8 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-            <input type="submit" value="Send">
-        </form>
+                <input type="submit" value="Send">
+            </form>
+        {% endif %}
     </div>
 {% endblock content %}
