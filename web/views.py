@@ -1,7 +1,8 @@
 from django.http import StreamingHttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login
 
-from web.forms import RegistrationForm
+from web.forms import RegistrationForm, AuthorizationForm
 from web.models import Video, User, UserProfile
 from web.services import open_file
 
@@ -33,6 +34,20 @@ def registration_view(request):
         'form': form,
         'is_success': is_success
     })
+
+
+def authorization_view(request):
+    form = AuthorizationForm()
+    if request.method == 'POST':
+        form = AuthorizationForm(data=request.POST)
+        if form.is_valid():
+            user = authenticate(**form.cleaned_data)
+            if user is None:
+                form.add_error(None, 'Введены неверные данные')
+            else:
+                login(request, user)
+                return redirect('main')
+    return render(request, 'web/authorization.html', {'form': form})
 
 
 def get_video(request, id):

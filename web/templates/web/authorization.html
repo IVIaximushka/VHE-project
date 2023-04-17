@@ -1,0 +1,24 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+    <div class="main-posts text-center">
+        <h1>Войти</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{field.label_tag}}
+                        <div>{{field}}</div>
+                        {% if field.errors%}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    {{error}}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            <input type="submit" value="Send">
+        </form>
+    </div>
+{% endblock content %}

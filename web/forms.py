@@ -29,3 +29,8 @@ class RegistrationForm(forms.Form):
         elif User.objects.filter(username=cleaned_data['username']).exists():
             self.add_error('username', 'Пользователь с таким именем уже существует!')
         return cleaned_data
+
+
+class AuthorizationForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
