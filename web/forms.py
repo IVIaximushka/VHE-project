@@ -6,13 +6,13 @@ from web.models import User
 
 
 class RegistrationForm(forms.Form):
-    email = forms.EmailField()
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
-    author = forms.BooleanField(initial=False, required=False)
-    avatar = forms.ImageField(required=False)
-
+    email = forms.EmailField(label="Email:")
+    username = forms.CharField(label="Имя пользователя:")
+    password = forms.CharField(widget=forms.PasswordInput(), label="Пароль:")
+    password2 = forms.CharField(widget=forms.PasswordInput(),label="Повторите пароль:")
+    author = forms.BooleanField(initial=False, required=False,label="Автор:")
+    avatar = forms.ImageField(required=False,label="Аватар:")
+    avatar.widget.attrs.update({"class": "center"})
     def clean(self):
         cleaned_data = super().clean()
         if not re.search(r'^(?=.*\W)(?=.*\D)(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$',
@@ -34,5 +34,5 @@ class RegistrationForm(forms.Form):
 
 
 class AuthorizationForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(label="Имя пользователя:")
+    password = forms.CharField(widget=forms.PasswordInput(),label="Пароль:")

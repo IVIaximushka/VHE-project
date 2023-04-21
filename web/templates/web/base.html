@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
     <link rel="stylesheet" href="{% static 'css/my-styles.css' %}">
     <script src="{% static 'js/vendor/modernizr-2.6.2.min.js' %}"></script>
-    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" >
+
+    <link rel="shortcut icon" href="{% static 'images/icon.png' %}" >
 </head>
 <body>
 
@@ -26,10 +28,10 @@
     <div class="bg-overlay"></div>
 
     <!-- SITE TOP -->
-    <div class="site-top">
-        <div class="site-header clearfix">
+    <div class="border-header site-top">
+        <div class=" site-header clearfix">
             <div class="container">
-                <a href="/" class="site-brand pull-left"><strong>Django</strong> video hosting</a>
+                <a id="color" href="/" class="site-brand pull-left"><strong >Django</strong> video hosting</a>
                 <div class="social-icons pull-right">
                     <ul>
                         <li><a href="#" class="fa fa-facebook"></a></li>
@@ -41,20 +43,43 @@
                 </div>
             </div>
             <div class="container">
-                <a href="/registration" class="navbar-brand pull-right">Регистрация</a>
-                <a href="/authorization" class="navbar-brand pull-right">Войти</a>
+                <a href="/registration" class="headbuttons navbar-brand  btn btn-primary pull-right">Регистрация</a>
+                <a href="/authorization" class="headbuttons navbar-brand btn btn-primary pull-right">Войти</a>
             </div>
         </div> <!-- .site-header -->
     </div> <!-- .site-top -->
+
+    <!-- Glitter animation  -->
+    <style>
+      #color {
+          padding: 0.5rem 0.3rem 0.5rem 0.3rem;
+          text-align: center;
+          border-radius: 0.3rem;
+        transition-property: background-color;
+        transition-duration: 1.5s;
+      }
+    </style>
+
+    <script>
+      color.onpointerover = function() {
+       //this.style.backgroundColor = 'red';
+        this.style.backgroundColor = 'green';
+        //this.style.backgroundColor = 'blue';
+      };color.onpointerleave = function() {
+       this.style.backgroundColor = '#580158';
+      };
+      <!-- Glitter animation  -->
+
+    </script>
 
     {% block content %}
     {% endblock content %}
 
     <!-- FOOTER -->
-    <footer class="site-footer">
+    <footer class="border-footer site-footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 text-center">
+                <div class="col-md-12 text-center" >
                     <p class="copyright-text">Copyright &copy; 2023 MAXDEN
                     | Website by <a rel="nofollow" href="https://github.com/IVIaximushka">Max</a>
                     and <a rel="nofollow" href="https://github.com/Chopar5115">Den</a></p>
