@@ -3,7 +3,7 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 
-from web.forms import RegistrationForm, AuthorizationForm
+from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm
 from web.models import Video, User, UserProfile
 from web.services import open_file
 
@@ -61,6 +61,23 @@ def authorization_view(request):
                 login(request, user)
                 return redirect('main')
     return render(request, 'web/authorization.html', {'form': form})
+
+
+@login_required
+def personal_account_view(request):
+    profile = UserProfile.objects.get(user=request.user)
+    user_form = UpdateUserForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=profile)
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+    return render(request, 'web/personal_account.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
 
 
 @login_required

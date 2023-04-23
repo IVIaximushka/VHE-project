@@ -2,7 +2,7 @@ import re
 
 from django import forms
 
-from web.models import User
+from web.models import User, UserProfile
 
 
 class RegistrationForm(forms.Form):
@@ -37,3 +37,21 @@ class RegistrationForm(forms.Form):
 class AuthorizationForm(forms.Form):
     username = forms.CharField(label="Имя пользователя:")
     password = forms.CharField(widget=forms.PasswordInput(), label="Пароль:")
+
+
+class UpdateUserForm(forms.ModelForm):
+    username = forms.CharField(label="Поменять имя пользователя:",
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['username', ]
+
+
+class UpdateProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False, label="Выбрать новую аватарку:",
+                              widget=forms.FileInput(attrs={'class': 'form-control-file'}))
+
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', ]

@@ -51,7 +51,9 @@
                 <div class="container">
                     <a href="{% url 'channels' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Каналы</a>
                     <a href="{% url 'logout' %}" class="headbuttons navbar-brand btn btn-primary pull-right">Выход</a>
-                    <a href="{% url 'main' %}" class="headbuttons navbar-brand btn btn-primary pull-right">Вы авторизованы</a>
+                    <a href="{% url 'personal_account' %}" class="headbuttons navbar-brand btn btn-primary pull-right">
+                        Личный кабинет
+                    </a>
                 </div>
             {% endif %}
         </div> <!-- .site-header -->

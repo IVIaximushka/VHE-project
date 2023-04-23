@@ -6,7 +6,7 @@
             <p><b><i>Спасибо за регистрацию!</i></b></p>
         {% else %}
             <div class="form-background">
-                <h1 class="color-main" style="margin-bottom:2rem; " >Регистрация</h1>
+                <h1 class="color-main" style="margin-bottom:2rem;">Регистрация</h1>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% for field in form %}
