@@ -51,26 +51,26 @@
 
     <!-- Glitter animation  -->
     <style>
-      #color {
-          padding: 0.5rem 0.3rem 0.5rem 0.3rem;
-          text-align: center;
-          border-radius: 0.3rem;
-        transition-property: background-color;
-        transition-duration: 1.5s;
-      }
+        #color {
+            padding: 0.5rem 0.3rem 0.5rem 0.3rem;
+            text-align: center;
+            border-radius: 0.3rem;
+            transition-property: background-color;
+            transition-duration: 1.5s;
+        }
     </style>
 
     <script>
-      color.onpointerover = function() {
-       //this.style.backgroundColor = 'red';
-        this.style.backgroundColor = 'green';
-        //this.style.backgroundColor = 'blue';
-      };color.onpointerleave = function() {
-       this.style.backgroundColor = '#580158';
-      };
-      <!-- Glitter animation  -->
-
+        color.onpointerover = function() {
+            //this.style.backgroundColor = 'red';
+            this.style.backgroundColor = 'green';
+            //this.style.backgroundColor = 'blue';
+        };
+        color.onpointerleave = function() {
+            this.style.backgroundColor = '#580158';
+        };
     </script>
+    <!-- Glitter animation  -->
 
     {% block content %}
     {% endblock content %}
@@ -97,9 +97,9 @@
     <script type="text/javascript">
         //<![CDATA[
         $(window).load(function () { // makes sure the whole site is loaded
-        $('#loader').fadeOut(); // will first fade out the loading animation
-        $('#loader-wrapper').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
-        $('body').delay(350).css({'overflow-y': 'visible'});
+            $('#loader').fadeOut(); // will first fade out the loading animation
+            $('#loader-wrapper').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
+            $('body').delay(350).css({'overflow-y': 'visible'});
         })
         //]]>
     </script>
