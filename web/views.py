@@ -1,6 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from web.forms import RegistrationForm, AuthorizationForm
 from web.models import Video, User, UserProfile
@@ -11,11 +12,13 @@ def main_view(request):
     return render(request, 'web/main.html', {'video_list': Video.objects.all()})
 
 
+@login_required
 def channels_view(request):
     author_list = UserProfile.objects.filter(is_author=True).select_related('user')
     return render(request, 'web/channels.html', {'author_list': author_list})
 
 
+@login_required
 def channel_view(request, user_id):
     author_video_list = Video.objects.filter(author_id=user_id).select_related('author')
     return render(request, 'web/main.html', {'video_list': author_video_list})
@@ -60,6 +63,13 @@ def authorization_view(request):
     return render(request, 'web/authorization.html', {'form': form})
 
 
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('main')
+
+
+@login_required
 def get_video(request, id):
     video = get_object_or_404(Video, id=id)
     video.views += 1
@@ -67,6 +77,7 @@ def get_video(request, id):
     return render(request, 'web/video.html', {'video': video})
 
 
+@login_required
 def get_streaming_video(request, id: int):
     file, status_code, content_length, content_range = open_file(request, id)
     response = StreamingHttpResponse(file, status=status_code, content_type='video/mp4')

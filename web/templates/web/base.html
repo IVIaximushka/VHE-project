@@ -31,7 +31,7 @@
     <div class="border-header site-top">
         <div class=" site-header clearfix">
             <div class="container">
-                <a id="color" href="/" class="site-brand pull-left"><strong >Django</strong> video hosting</a>
+                <a id="color" href="{% url 'main' %}" class="site-brand pull-left"><strong >Django</strong> video hosting</a>
                 <div class="social-icons pull-right">
                     <ul>
                         <li><a href="#" class="fa fa-facebook"></a></li>
@@ -42,11 +42,18 @@
                     </ul>
                 </div>
             </div>
-            <div class="container">
-                <a href="/channels" class="headbuttons navbar-brand btn btn-primary pull-left">Каналы</a>
-                <a href="/registration" class="headbuttons navbar-brand  btn btn-primary pull-right">Регистрация</a>
-                <a href="/authorization" class="headbuttons navbar-brand btn btn-primary pull-right">Войти</a>
-            </div>
+            {% if user.is_anonymous %}
+                <div class="container">
+                    <a href="{% url 'registration' %}" class="headbuttons navbar-brand  btn btn-primary pull-right">Регистрация</a>
+                    <a href="{% url 'authorization' %}" class="headbuttons navbar-brand btn btn-primary pull-right">Войти</a>
+                </div>
+            {% else %}
+                <div class="container">
+                    <a href="{% url 'channels' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Каналы</a>
+                    <a href="{% url 'logout' %}" class="headbuttons navbar-brand btn btn-primary pull-right">Выход</a>
+                    <a href="{% url 'main' %}" class="headbuttons navbar-brand btn btn-primary pull-right">Вы авторизованы</a>
+                </div>
+            {% endif %}
         </div> <!-- .site-header -->
     </div> <!-- .site-top -->
 
