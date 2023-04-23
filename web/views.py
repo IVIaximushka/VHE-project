@@ -16,6 +16,11 @@ def channels_view(request):
     return render(request, 'web/channels.html', {'author_list': author_list})
 
 
+def channel_view(request, user_id):
+    author_video_list = Video.objects.filter(author_id=user_id).select_related('author')
+    return render(request, 'web/main.html', {'video_list': author_video_list})
+
+
 def registration_view(request):
     is_success = False
     form = RegistrationForm()
