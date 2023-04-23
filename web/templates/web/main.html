@@ -16,7 +16,9 @@
                                     <div class="inside">
                                         <i class="fa fa-plus"></i>
                                         <span class="date">{{ video.pub_date }}</span>
-                                        <h4><a href="{% url 'video' video.id %}">{{ video.title }}</a></h4>
+                                        <h4>
+                                            <a href="{% url 'video_watching' video.id %}">{{ video.title }}</a>
+                                        </h4>
                                         <p>{{ video.description|slice:":100" }}</p>
                                     </div>
                                 </div>

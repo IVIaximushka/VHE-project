@@ -7,5 +7,5 @@ urlpatterns = [
     path('registration/', registration_view, name='registration'),
     path('authorization/', authorization_view, name='authorization'),
     path('stream/<int:id>/', get_streaming_video, name='stream'),
-    path('<int:id>/', get_video, name='video'),
+    path('video/<int:id>/watch', get_video, name='video_watching'),
 ]

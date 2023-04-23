@@ -51,8 +51,8 @@ def authorization_view(request):
 
 
 def get_video(request, id):
-    _video = get_object_or_404(Video, id=id)
-    return render(request, 'web/video.html', {'video': _video})
+    video = get_object_or_404(Video, id=id)
+    return render(request, 'web/video.html', {'video': video})
 
 
 def get_streaming_video(request, id: int):
