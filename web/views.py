@@ -52,6 +52,8 @@ def authorization_view(request):
 
 def get_video(request, id):
     video = get_object_or_404(Video, id=id)
+    video.views += 1
+    video.save(update_fields=['views'])
     return render(request, 'web/video.html', {'video': video})
 
 
