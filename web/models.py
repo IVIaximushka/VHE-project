@@ -8,7 +8,7 @@ User = get_user_model()
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, verbose_name='Аватарка')
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/nofoto.jpg', null=True, blank=True, verbose_name='Аватарка')
     is_author = models.BooleanField(default=False, verbose_name='Автор')
 
     class Meta:
