@@ -2,7 +2,7 @@ import re
 
 from django import forms
 
-from web.models import User, UserProfile
+from web.models import User, UserProfile, Video
 
 
 class RegistrationForm(forms.Form):
@@ -55,3 +55,12 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['avatar', ]
+
+
+class LoadVideoForm(forms.Form):
+    title = forms.CharField(label='Название')
+    video = forms.FileField(label='Видео',
+                            widget=forms.FileInput(attrs={'class': 'form-control-file'}))
+    preview = forms.ImageField(label='Превью', required=False, initial=None)
+    description = forms.CharField(label='Описание', required=False,
+                                  widget=forms.Textarea())

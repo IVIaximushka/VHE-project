@@ -3,7 +3,7 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 
-from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm
+from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm, LoadVideoForm
 from web.models import Video, User, UserProfile
 from web.services import open_file
 
@@ -76,8 +76,31 @@ def personal_account_view(request):
             profile_form.save()
     return render(request, 'web/personal_account.html', {
         'user_form': user_form,
-        'profile_form': profile_form
+        'profile_form': profile_form,
+        'is_author': profile.is_author
     })
+
+
+@login_required
+def load_video_view(request):
+    profile = UserProfile.objects.get(user=request.user)
+    video_form = LoadVideoForm()
+    if request.method == 'POST':
+        video_form = LoadVideoForm(request.POST, request.FILES)
+        if video_form.is_valid():
+            new_video = Video(
+                title=video_form.cleaned_data['title'],
+                video=video_form.cleaned_data['video'],
+                preview=(video_form.cleaned_data['preview']
+                         if video_form.cleaned_data['preview'] is not None
+                         else 'preview/nopreview.jpg'),
+                description=video_form.cleaned_data['description'],
+                author=profile
+            )
+            new_video.save()
+            print('daf')
+            return redirect('main')
+    return render(request, 'web/load_video.html', {'video_form': video_form})
 
 
 @login_required

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from web.views import main_view, get_streaming_video, get_video, registration_view, authorization_view, channels_view, \
-    channel_view, logout_view, personal_account_view
+    channel_view, logout_view, personal_account_view, load_video_view
 
 urlpatterns = [
     path('', main_view, name='main'),
@@ -9,6 +9,7 @@ urlpatterns = [
     path('authorization/', authorization_view, name='authorization'),
     path('logout/', logout_view, name='logout'),
     path('personal_account/', personal_account_view, name='personal_account'),
+    path('load_video/', load_video_view, name='load_video'),
     path('channels/', channels_view, name='channels'),
     path('channel/<int:user_id>/', channel_view, name='channel'),
     path('stream/<int:id>/', get_streaming_video, name='stream'),

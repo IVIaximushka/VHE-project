@@ -8,7 +8,8 @@ User = get_user_model()
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    avatar = models.ImageField(upload_to='avatars/', default='avatars/nofoto.jpg', null=True, blank=True, verbose_name='Аватарка')
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/nofoto.jpg',
+                               null=True, blank=True, verbose_name='Аватарка')
     is_author = models.BooleanField(default=False, verbose_name='Автор')
 
     class Meta:
@@ -42,7 +43,8 @@ class Video(models.Model):
                              validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
                              verbose_name='Видео')
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
-    preview = models.ImageField(upload_to='preview/', null=True, blank=True, verbose_name='Превью')
+    preview = models.ImageField(upload_to='preview/', default='preview/nopreview.jpg',
+                                null=True, blank=True, verbose_name='Превью')
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     description = models.CharField(max_length=500, null=True, default=None, verbose_name='Описание')
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Автор')
