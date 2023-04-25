@@ -31,7 +31,7 @@
     <div class="border-header site-top">
         <div class=" site-header clearfix">
             <div class="container">
-                <a id="color" href="{% url 'main' %}" class="site-brand pull-left"><strong >Django</strong> video hosting</a>
+                <a href="{% url 'main' %}" class="site-brand pull-left"><div id="color"><strong >Django</strong> video hosting</div></a>
                 <div class="social-icons pull-right">
                     <ul>
                         <li><a href="#" class="fa fa-facebook"></a></li>
@@ -60,25 +60,64 @@
     </div> <!-- .site-top -->
 
     <!-- Glitter animation  -->
+    <script>
+    let color = document.querySelector('#color');
+
+// Генерируем и устанавливаем рандомный фон
+const setRandomBg = _ => color.style.color = Array(...Array(6)).reduce(_ => _ += '0123456789ABCDEF'[Math.floor(Math.random() * 16)], '#');
+
+// При наведении курсора на объект
+color.addEventListener('mouseenter', _ => {
+  // Ставим новый цвет
+  setRandomBg();
+  // Перезапускаем анимацию
+  color.classList.remove('anim');
+  setTimeout(_ => color.classList.add('anim'), 10);
+  // По окончании итерации анимации, меняем фон
+color.addEventListener('animationiteration', _ => setRandomBg());
+setRandomBg();
+});
+</script>
     <style>
-        #color {
-            padding: 0.5rem 0.3rem 0.5rem 0.3rem;
-            text-align: center;
-            border-radius: 0.3rem;
-            transition-property: background-color;
-            transition-duration: 1.5s;
-        }
+      #color {
+          padding: 0.5rem 0.3rem 0.5rem 0.3rem;
+          border-radius: 0.3rem;
+        transition-property: color;
+        transition-duration: 1.5s;
+      }
+      .anim{
+          animation: bs 2s infinite;
+      }
+      @keyframes bs{
+  0%
+  {
+        filter: brightness(1);
+  }
+  25%
+  {
+          filter: brightness(0.95);
+  }
+  50%
+  {
+      filter: brightness(0.9);
+  }
+  75%
+  {
+      filter: brightness(0.95);
+  }
+  100%
+  {
+        filter: brightness(1);
+  }
+}
     </style>
 
     <script>
-        color.onpointerover = function() {
-            //this.style.backgroundColor = 'red';
-            this.style.backgroundColor = 'green';
-            //this.style.backgroundColor = 'blue';
-        };
-        color.onpointerleave = function() {
-            this.style.backgroundColor = '#580158';
-        };
+      color.onpointerleave = function() {
+       //this.style.backgroundColor = '#580158';
+          this.style.color = '#FFFFFF';
+        color.classList.remove('anim');
+      };
     </script>
     <!-- Glitter animation  -->
 

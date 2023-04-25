@@ -6,13 +6,15 @@ from web.models import User, UserProfile, Video
 
 
 class RegistrationForm(forms.Form):
-    email = forms.EmailField(label="Email:")
+    email = forms.EmailField(label="Электропочта:")
     username = forms.CharField(label="Имя пользователя:")
-    password = forms.CharField(widget=forms.PasswordInput(), label="Пароль:")
-    password2 = forms.CharField(widget=forms.PasswordInput(), label="Повторите пароль:")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-field"}), label="Пароль:")
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-field"}), label="Повторите пароль:")
     author = forms.BooleanField(initial=False, required=False, label="Автор:")
     avatar = forms.ImageField(required=False, label="Аватар:")
     avatar.widget.attrs.update({"class": "center"})
+    email.widget.attrs.update({"class": "form-field"})
+    username.widget.attrs.update({"class": "form-field"})
 
     def clean(self):
         cleaned_data = super().clean()
@@ -36,12 +38,13 @@ class RegistrationForm(forms.Form):
 
 class AuthorizationForm(forms.Form):
     username = forms.CharField(label="Имя пользователя:")
-    password = forms.CharField(widget=forms.PasswordInput(), label="Пароль:")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-field"}), label="Пароль:")
+    username.widget.attrs.update({"class": "form-field"})
 
 
 class UpdateUserForm(forms.ModelForm):
     username = forms.CharField(label="Поменять имя пользователя:",
-                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+                               widget=forms.TextInput(attrs={'class': 'form-field form-control'}))
 
     class Meta:
         model = User
@@ -63,4 +66,5 @@ class LoadVideoForm(forms.Form):
                             widget=forms.FileInput(attrs={'class': 'form-control-file'}))
     preview = forms.ImageField(label='Превью', required=False, initial=None)
     description = forms.CharField(label='Описание', required=False,
-                                  widget=forms.Textarea())
+                                  widget=forms.Textarea(attrs={"class": "form-field"}))
+    title.widget.attrs.update({"class": "form-field"})
