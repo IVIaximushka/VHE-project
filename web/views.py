@@ -127,3 +127,11 @@ def get_streaming_video(request, id: int):
     response['Cache-Control'] = 'no-cache'
     response['Content-Range'] = content_range
     return response
+
+
+def chats(request):
+    return render(request, "web/chats.html")
+
+
+def room(request, room_name):
+    return render(request, "web/room.html", {"room_name": room_name})
