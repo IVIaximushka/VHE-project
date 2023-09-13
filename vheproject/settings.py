@@ -72,7 +72,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vheproject.wsgi.application'
 ASGI_APPLICATION = "vheproject.asgi.application"
-# ASGI_APPLICATION = "vheproject.routing.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 
 
 # Database
