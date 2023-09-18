@@ -129,6 +129,10 @@ def get_streaming_video(request, id: int):
     return response
 
 
+def create_chat(request):
+    return render(request, "web/chat_creator.html")
+
+
 def chats(request):
     return render(request, "web/chats.html")
 

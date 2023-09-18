@@ -60,6 +60,7 @@ class Video(models.Model):
 
 class Chat(models.Model):
     title = models.CharField(max_length=40, null=False, verbose_name='Название чата')
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Админ')
 
     def __str__(self):
         return self.title

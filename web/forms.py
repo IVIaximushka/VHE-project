@@ -68,3 +68,7 @@ class LoadVideoForm(forms.Form):
     description = forms.CharField(label='Описание', required=False,
                                   widget=forms.Textarea(attrs={"class": "form-field"}))
     title.widget.attrs.update({"class": "form-field"})
+
+
+class CreateChatForm(forms.ModelForm):
+    pass
