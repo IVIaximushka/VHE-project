@@ -9,9 +9,9 @@
                 <h1 class="color-main" style="margin-bottom:2rem;">Создание чата</h1>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% for field in form %}
+                    {% for field in creation_form %}
                         <div class="form-group">
-                            {{field.label_tag}}
+                            {{field.title}}
                             <div>{{field}}</div>
                             {% if field.errors %}
                                 {% for error in field.errors %}

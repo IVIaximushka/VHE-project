@@ -3,8 +3,9 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 
-from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm, LoadVideoForm
-from web.models import Video, User, UserProfile
+from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm, LoadVideoForm, \
+    CreateChatForm
+from web.models import Video, User, UserProfile, Chat
 from web.services import open_file
 
 
@@ -98,7 +99,6 @@ def load_video_view(request):
                 author=profile
             )
             new_video.save()
-            print('daf')
             return redirect('main')
     return render(request, 'web/load_video.html', {'video_form': video_form})
 
@@ -129,12 +129,27 @@ def get_streaming_video(request, id: int):
     return response
 
 
+@login_required
 def create_chat(request):
-    return render(request, "web/chat_creator.html")
+    is_success = False
+    creation_form = CreateChatForm(instance=request.user)
+    if request.method == 'POST':
+        creation_form = CreateChatForm(request.POST, initial={'admin': request.user})
+        if creation_form.is_valid():
+            creation_form.save()
+            is_success = True
+    return render(request, "web/chat_creator.html", {
+        'creation_form': creation_form,
+        'is_success': is_success
+    })
 
 
+@login_required
 def chats(request):
-    return render(request, "web/chats.html")
+    all_chats = Chat.objects.all()
+    return render(request, "web/chats.html", {
+        'chats': all_chats
+    })
 
 
 def room(request, room_name):

@@ -14,7 +14,7 @@ urlpatterns = [
     path('channel/<int:user_id>/', channel_view, name='channel'),
     path('stream/<int:id>/', get_streaming_video, name='stream'),
     path('video/<int:id>/watch', get_video, name='video_watching'),
-    path('create_chat', create_chat, name='chat_creator'),
+    path('create_chat/', create_chat, name='chat_creator'),
     path('chats/', chats, name='chats'),
     path('chats/<str:room_name>/', room, name="room"),
 ]
