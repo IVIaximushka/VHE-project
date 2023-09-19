@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm, LoadVideoForm, \
     CreateChatForm
-from web.models import Video, User, UserProfile, Chat
+from web.models import Video, User, UserProfile, Chat, ChatUser
 from web.services import open_file
 
 
@@ -137,6 +137,11 @@ def create_chat(request):
         creation_form = CreateChatForm(request.POST, initial={'admin': request.user})
         if creation_form.is_valid():
             creation_form.save()
+            new_user = ChatUser(
+                chat=Chat.objects.filter(title=creation_form.instance.title).first(),
+                user=request.user
+            )
+            new_user.save()
             is_success = True
     return render(request, "web/chat_creator.html", {
         'creation_form': creation_form,
