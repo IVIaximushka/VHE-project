@@ -8,6 +8,7 @@
             {% for chat in chats %}
                 <div class="form-group">
                     {{ chat.title }}
+                    <a href="{% url 'enter_chat' chat.id %}">Вступить</a>
                 </div>
             {% endfor %}
         </div>

@@ -150,8 +150,21 @@ def create_chat(request):
 
 
 @login_required
+def enter_chat(request, id):
+    if len(ChatUser.objects.filter(chat_id=id, user=request.user)) == 0:
+        new_user = ChatUser(
+            chat_id=id,
+            user=request.user
+        )
+        new_user.save()
+    return redirect('chats')
+
+
+@login_required
 def chats(request):
-    all_chats = Chat.objects.all()
+    my_chats = list(ChatUser.objects.filter(user=request.user).values_list('chat_id'))
+    my_chats = list(map(lambda x: x[0], my_chats))
+    all_chats = Chat.objects.exclude(id__in=my_chats)
     return render(request, "web/chats.html", {
         'chats': all_chats
     })
