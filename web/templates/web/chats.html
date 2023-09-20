@@ -4,6 +4,7 @@
     <div class="flex-container main-posts text-center">
         <div class="form-background">
             <a href="{% url 'chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Чаты</a>
+            <a href="{% url 'admin_chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Администрирование</a>
             <a href="{% url 'my_chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Мои чаты</a>
             {% block chat %}
             {% endblock chat %}

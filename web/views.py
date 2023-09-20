@@ -180,5 +180,17 @@ def my_chats(request):
     })
 
 
+@login_required
+def edit_chat(request, id):
+    members = ChatUser.objects.select_related('user').filter(chat_id=id, user__=request.user).all()
+    return render(request, "web/edit_chat.html", {"members": members})
+
+
+@login_required
+def admin_chat(request):
+    chats = Chat.objects.filter(admin=request.user).all()
+    return render(request, "web/admin_chats.html", {"chats": chats})
+
+
 def room(request, room_name):
     return render(request, "web/room.html", {"room_name": room_name})

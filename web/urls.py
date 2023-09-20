@@ -1,7 +1,8 @@
 from django.urls import path
 
 from web.views import main_view, get_streaming_video, get_video, registration_view, authorization_view, channels_view, \
-    channel_view, logout_view, personal_account_view, load_video_view, chats, room, create_chat, enter_chat, my_chats
+    channel_view, logout_view, personal_account_view, load_video_view, chats, room, create_chat, enter_chat, my_chats, \
+    edit_chat, admin_chat
 
 urlpatterns = [
     path('', main_view, name='main'),
@@ -18,5 +19,7 @@ urlpatterns = [
     path('chats/<int:id>/enter', enter_chat, name='enter_chat'),
     path('chats/', chats, name='chats'),
     path('chats/my', my_chats, name='my_chats'),
+    path('chats/admin', admin_chat, name='admin_chats'),
+    path('chats/<int:id>/edit', edit_chat, name='edit_chat'),
     path('chats/<str:room_name>/', room, name="room"),
 ]
