@@ -1,0 +1,12 @@
+{% extends 'web/chats.html' %}
+
+{% block chat %}
+    <h1 class="color-main" style="margin-bottom:2rem;">Мои чаты</h1>
+    {% csrf_token %}
+    {% for chat in chats %}
+        <div class="form-group">
+            {{ chat.title }}
+{#                    <a href="{% url 'edit_chat' chat.id %}">Изменить</a>#}
+        </div>
+    {% endfor %}
+{% endblock chat %}

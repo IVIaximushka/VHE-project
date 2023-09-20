@@ -165,7 +165,17 @@ def chats(request):
     my_chats = list(ChatUser.objects.filter(user=request.user).values_list('chat_id'))
     my_chats = list(map(lambda x: x[0], my_chats))
     all_chats = Chat.objects.exclude(id__in=my_chats)
-    return render(request, "web/chats.html", {
+    return render(request, "web/all_chats.html", {
+        'chats': all_chats
+    })
+
+
+@login_required
+def my_chats(request):
+    chats = list(ChatUser.objects.filter(user=request.user).values_list('chat_id'))
+    chats = list(map(lambda x: x[0], chats))
+    all_chats = Chat.objects.filter(id__in=chats)
+    return render(request, "web/my_chats.html", {
         'chats': all_chats
     })
 

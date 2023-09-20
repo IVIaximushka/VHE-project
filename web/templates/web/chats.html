@@ -3,31 +3,10 @@
 {% block content %}
     <div class="flex-container main-posts text-center">
         <div class="form-background">
-            <h1 class="color-main" style="margin-bottom:2rem;">Чаты</h1>
-            {% csrf_token %}
-            {% for chat in chats %}
-                <div class="form-group">
-                    {{ chat.title }}
-                    <a href="{% url 'enter_chat' chat.id %}">Вступить</a>
-                </div>
-            {% endfor %}
+            <a href="{% url 'chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Чаты</a>
+            <a href="{% url 'my_chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Мои чаты</a>
+            {% block chat %}
+            {% endblock chat %}
         </div>
-        What chat room would you like to enter?<br>
-        <input id="room-name-input" type="text" size="100"><br>
-        <input id="room-name-submit" type="button" value="Enter">
-
-        <script>
-            document.querySelector('#room-name-input').focus();
-            document.querySelector('#room-name-input').onkeyup = function(e) {
-                if (e.key === 'Enter') {  // enter, return
-                    document.querySelector('#room-name-submit').click();
-                }
-            };
-
-            document.querySelector('#room-name-submit').onclick = function(e) {
-                var roomName = document.querySelector('#room-name-input').value;
-                window.location.pathname = '/chats/' + roomName + '/';
-            };
-        </script>
     </div>
 {% endblock content %}
