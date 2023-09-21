@@ -172,7 +172,7 @@ def chats(request):
 
 @login_required
 def my_chats(request):
-    chats = list(ChatUser.objects.filter(user=request.user).values_list('chat_id'))
+    chats = list(ChatUser.objects.filter(user=request.user, ban=False).values_list('chat_id'))
     chats = list(map(lambda x: x[0], chats))
     all_chats = Chat.objects.filter(id__in=chats)
     return render(request, "web/my_chats.html", {
@@ -182,8 +182,16 @@ def my_chats(request):
 
 @login_required
 def edit_chat(request, id):
-    members = ChatUser.objects.select_related('user').filter(chat_id=id, user__=request.user).all()
+    members = ChatUser.objects.select_related('user').filter(chat_id=id).exclude(user=request.user).all()
     return render(request, "web/edit_chat.html", {"members": members})
+
+
+@login_required
+def ban(request, chat_id, user_id):
+    book_note = get_object_or_404(ChatUser, user_id=user_id, chat_id=chat_id)
+    book_note.ban = not book_note.ban
+    book_note.save()
+    return redirect('edit_chat', id=chat_id)
 
 
 @login_required

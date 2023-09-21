@@ -6,7 +6,11 @@
     {% for member in members %}
         <div class="form-group">
             {{ member.user }}
-{#                    <a href="{% url 'edit_chat' chat.id %}">Изменить</a>#}
+            {% if member.ban == False %}
+                <a href="{% url 'ban' member.chat_id member.user_id %}">Забанить</a>
+            {% else %}
+                <a href="{% url 'ban' member.chat_id member.user_id %}">Разбанить</a>
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock chat %}
