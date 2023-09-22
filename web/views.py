@@ -200,5 +200,13 @@ def admin_chat(request):
     return render(request, "web/admin_chats.html", {"chats": chats})
 
 
+@login_required
 def room(request, room_name):
-    return render(request, "web/room.html", {"room_name": room_name})
+    is_success = True if len(ChatUser.objects
+                             .filter(user=request.user, ban=False)
+                             .select_related('chat')
+                             .filter(chat__title=room_name)) > 0 else False
+    return render(request, "web/room.html", {
+        "is_success": is_success,
+        "room_name": room_name
+    })
