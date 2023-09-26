@@ -2,10 +2,17 @@
 
 {% block content %}
     <div class="flex-container main-posts text-center">
-        <div class="form-background">
-            <a href="{% url 'chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Чаты</a>
-            <a href="{% url 'admin_chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Администрирование</a>
-            <a href="{% url 'my_chats' %}" class="headbuttons navbar-brand btn btn-primary pull-left">Мои чаты</a>
+        <div class="form-background" style="height: 20%">
+            <div class="dropdown">
+                <div class="dropbtn btn">menu</div>
+                <div class="dropdown-content">
+                    <a href="{% url 'chats' %}" class="headbuttons navbar-brand btn btn-primary button-menu pull-left">Чаты</a>
+                    <a href="{% url 'admin_chats' %}" class="headbuttons navbar-brand btn btn-primary button-menu button-admin pull-left">Администрирование</a>
+                    <a href="{% url 'my_chats' %}" class="headbuttons navbar-brand btn btn-primary button-menu pull-left">Мои чаты</a>
+                </div>
+            </div>
+            <br>
+            <br>
             {% block chat %}
             {% endblock chat %}
         </div>

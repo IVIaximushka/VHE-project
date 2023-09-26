@@ -1,6 +1,7 @@
 {% extends 'web/chats.html' %}
 
 {% block chat %}
+    <a href="{% url 'chat_creator' %}" class="headbuttons" >Создать чат</a>
     <h1 class="color-main" style="margin-bottom:2rem;">Мои чаты</h1>
     {% csrf_token %}
     {% for chat in chats %}

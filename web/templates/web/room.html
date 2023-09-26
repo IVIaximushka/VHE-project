@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html>
+
+{% load static %}
 <head>
     <meta charset="utf-8"/>
+
+    <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
     <title>Chat Room</title>
 </head>
-<body>
-    {% if is_success %}
-        <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-        <input id="chat-message-input" type="text" size="100"><br>
-        <input id="chat-message-submit" type="button" value="Send">
-        {{ room_name|json_script:"room-name" }}
-        <script>
-            const roomName = JSON.parse(document.getElementById('room-name').textContent);
+<body >
+    <div class="chat-background">
+        {% if is_success %}
+            <textarea class="chat-text " id="chat-log" cols="100" rows="20"></textarea>
+            <input class="chat-input " id="chat-message-input" type="text" size="100">
+            <input class="chat-btn " id="chat-message-submit" type="button" value="Send">
+            {{ room_name|json_script:"room-name" }}
+            <script>
+                const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-            const chatSocket = new WebSocket(
-                'ws://'
-                + window.location.host
-                + '/ws/chats/'
-                + roomName
-                + '/'
-            );
+                const chatSocket = new WebSocket(
+                    'ws://'
+                    + window.location.host
+                    + '/ws/chats/'
+                    + roomName
+                    + '/'
+                );
 
-            chatSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                document.querySelector('#chat-log').value += (data.message + '\n');
-            };
+                chatSocket.onmessage = function(e) {
+                    const data = JSON.parse(e.data);
+                    let date = new Date();
+                    let str = new String();
+                    str = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                    document.querySelector('#chat-log').value += ( data.user + ' ' + str + ' ' + data.message + '\n' );
+                };
 
-            chatSocket.onclose = function(e) {
-                console.error('Chat socket closed unexpectedly');
-            };
+                chatSocket.onclose = function(e) {
+                    console.error('Chat socket closed unexpectedly');
+                };
 
-            document.querySelector('#chat-message-input').focus();
-            document.querySelector('#chat-message-input').onkeyup = function(e) {
-                if (e.key === 'Enter') {  // enter, return
-                    document.querySelector('#chat-message-submit').click();
-                }
-            };
+                document.querySelector('#chat-message-input').focus();
+                document.querySelector('#chat-message-input').onkeyup = function(e) {
+                    if (e.key === 'Enter') {  // enter, return
+                        document.querySelector('#chat-message-submit').click();
+                    }
+                };
 
-            document.querySelector('#chat-message-submit').onclick = function(e) {
-                const messageInputDom = document.querySelector('#chat-message-input');
-                const message = messageInputDom.value;
-                chatSocket.send(JSON.stringify({
-                    'message': message
-                }));
-                messageInputDom.value = '';
-            };
-        </script>
+                document.querySelector('#chat-message-submit').onclick = function(e) {
+                    const messageInputDom = document.querySelector('#chat-message-input');
+                    const message = messageInputDom.value;
+                    chatSocket.send(JSON.stringify({
+                        'message': message,
+                    }));
+                    messageInputDom.value = '';
+                };
+            </script>
+        </div>
     {% else %}
         Вы забанены!
     {% endif %}
