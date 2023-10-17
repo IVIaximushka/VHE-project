@@ -56,3 +56,21 @@ class Video(models.Model):
     class Meta:
         verbose_name = 'Видео'
         verbose_name_plural = 'Видео'
+
+
+class Chat(models.Model):
+    title = models.CharField(max_length=40, null=False, verbose_name='Название чата')
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Админ')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Чат'
+        verbose_name_plural = 'Чаты'
+
+
+class ChatUser(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, verbose_name='Чат')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    ban = models.BooleanField(default=False, verbose_name='Бан')

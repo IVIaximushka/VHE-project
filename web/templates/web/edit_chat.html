@@ -1,0 +1,16 @@
+{% extends 'web/chats.html' %}
+
+{% block chat %}
+    <h1 class="color-main" style="margin-bottom:2rem;">Мои чаты</h1>
+    {% csrf_token %}
+    {% for member in members %}
+        <div class="form-group">
+            {{ member.user }}
+            {% if member.ban == False %}
+                <a href="{% url 'ban' member.chat_id member.user_id %}">Забанить</a>
+            {% else %}
+                <a href="{% url 'ban' member.chat_id member.user_id %}">Разбанить</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock chat %}

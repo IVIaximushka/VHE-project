@@ -3,8 +3,9 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 
-from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm, LoadVideoForm
-from web.models import Video, User, UserProfile
+from web.forms import RegistrationForm, AuthorizationForm, UpdateUserForm, UpdateProfileForm, LoadVideoForm, \
+    CreateChatForm
+from web.models import Video, User, UserProfile, Chat, ChatUser
 from web.services import open_file
 
 
@@ -98,7 +99,6 @@ def load_video_view(request):
                 author=profile
             )
             new_video.save()
-            print('daf')
             return redirect('main')
     return render(request, 'web/load_video.html', {'video_form': video_form})
 
@@ -127,3 +127,86 @@ def get_streaming_video(request, id: int):
     response['Cache-Control'] = 'no-cache'
     response['Content-Range'] = content_range
     return response
+
+
+@login_required
+def create_chat(request):
+    is_success = False
+    creation_form = CreateChatForm(instance=request.user)
+    if request.method == 'POST':
+        creation_form = CreateChatForm(request.POST, initial={'admin': request.user})
+        if creation_form.is_valid():
+            creation_form.save()
+            new_user = ChatUser(
+                chat=Chat.objects.filter(title=creation_form.instance.title).first(),
+                user=request.user
+            )
+            new_user.save()
+            is_success = True
+    return render(request, "web/chat_creator.html", {
+        'creation_form': creation_form,
+        'is_success': is_success
+    })
+
+
+@login_required
+def enter_chat(request, id):
+    if len(ChatUser.objects.filter(chat_id=id, user=request.user)) == 0:
+        new_user = ChatUser(
+            chat_id=id,
+            user=request.user
+        )
+        new_user.save()
+    return redirect('chats')
+
+
+@login_required
+def chats(request):
+    my_chats = list(ChatUser.objects.filter(user=request.user).values_list('chat_id'))
+    my_chats = list(map(lambda x: x[0], my_chats))
+    all_chats = Chat.objects.exclude(id__in=my_chats)
+    return render(request, "web/all_chats.html", {
+        'chats': all_chats
+    })
+
+
+@login_required
+def my_chats(request):
+    chats = list(ChatUser.objects.filter(user=request.user, ban=False).values_list('chat_id'))
+    chats = list(map(lambda x: x[0], chats))
+    all_chats = Chat.objects.filter(id__in=chats)
+    return render(request, "web/my_chats.html", {
+        'chats': all_chats
+    })
+
+
+@login_required
+def edit_chat(request, id):
+    members = ChatUser.objects.select_related('user').filter(chat_id=id).exclude(user=request.user).all()
+    return render(request, "web/edit_chat.html", {"members": members})
+
+
+@login_required
+def ban(request, chat_id, user_id):
+    book_note = get_object_or_404(ChatUser, user_id=user_id, chat_id=chat_id)
+    book_note.ban = not book_note.ban
+    book_note.save()
+    return redirect('edit_chat', id=chat_id)
+
+
+@login_required
+def admin_chat(request):
+    chats = Chat.objects.filter(admin=request.user).all()
+    return render(request, "web/admin_chats.html", {"chats": chats})
+
+
+@login_required
+def room(request, room_name):
+    is_success = True if len(ChatUser.objects
+                             .filter(user=request.user, ban=False)
+                             .select_related('chat')
+                             .filter(chat__title=room_name)) > 0 else False
+    return render(request, "web/room.html", {
+        "is_success": is_success,
+        "room_name": room_name
+    })

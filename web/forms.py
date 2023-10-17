@@ -2,7 +2,7 @@ import re
 
 from django import forms
 
-from web.models import User, UserProfile, Video
+from web.models import User, UserProfile, Chat
 
 
 class RegistrationForm(forms.Form):
@@ -68,3 +68,13 @@ class LoadVideoForm(forms.Form):
     description = forms.CharField(label='Описание', required=False,
                                   widget=forms.Textarea(attrs={"class": "form-field"}))
     title.widget.attrs.update({"class": "form-field"})
+
+
+class CreateChatForm(forms.ModelForm):
+    def save(self, commit=True):
+        self.instance.admin = self.initial['admin']
+        return super().save(commit)
+
+    class Meta:
+        model = Chat
+        fields = ('title',)
