@@ -22,5 +22,5 @@ urlpatterns = [
     path('chats/admin', admin_chat, name='admin_chats'),
     path('chats/<int:id>/edit', edit_chat, name='edit_chat'),
     path('chats/<int:chat_id>/edit/ban/<int:user_id>', ban, name='ban'),
-    path('chats/<str:room_name>/', room, name="room"),
+    path('chats/<str:room_name>/', room, name='room'),
 ]
