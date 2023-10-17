@@ -1,0 +1,30 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+    <div class="main-posts">
+        <div class="container">
+            <div class="row">
+                <div class="blog-masonry masonry-true">
+                    {% for author in author_list %}
+                        <div class="post-masonry col-md-4 col-sm-6">
+                            <div class="post-thumb">
+                                <img src="{{ author.avatar.url }}" alt="">
+                                <div class="title-over">
+                                    <h4>{{ author.user.username }}</h4>
+                                </div>
+                                <div class="post-hover text-center">
+                                    <div class="inside">
+                                        <i class="fa fa-plus"></i>
+                                        <h4>
+                                            <a href="{% url 'channel' author.id %}">{{ author.user.username }}</a>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- /.post-masonry -->
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

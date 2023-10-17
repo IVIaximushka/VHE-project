@@ -1,0 +1,18 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+    <div class="flex-container main-posts text-center">
+        <div class="form-background">
+            <h1 class="color-main" style="margin:2rem 0 2rem 0;padding-top:2rem; ">Личный кабинет</h1>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ user_form.username.label_tag }} {{ user_form.username }}
+                {{ profile_form.avatar.label_tag }} {{ profile_form.avatar }}
+                <input class="button-change btn" type="submit" value="Поменять данные">
+            </form>
+            {% if is_author %}
+                <a href="{% url 'load_video' %}"><button>Создать видео</button></a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}
