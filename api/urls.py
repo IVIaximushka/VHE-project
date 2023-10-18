@@ -1,8 +1,10 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 
 from api.views import start_view, video_view
 
 urlpatterns = [
     path('start/', start_view, name='start'),
-    path('videos/', video_view, name='videos')
+    path('videos/', video_view, name='videos'),
+    path('token/', obtain_auth_token, name='token')
 ]
