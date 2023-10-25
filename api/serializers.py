@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.models import User, UserProfile, Genre
+from web.models import User, UserProfile, Genre, Video
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,13 +22,15 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ('id', 'title')
 
 
-class VideoSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField()
-    video = serializers.FileField()
-    pub_date = serializers.DateTimeField()
-    preview = serializers.ImageField()
-    views = serializers.IntegerField()
-    description = serializers.CharField()
-    author = UserProfileSerializer()
-    genre = GenreSerializer()
+class VideoSerializer(serializers.ModelSerializer):
+    author = UserProfileSerializer(read_only=True)
+    # genre = GenreSerializer()
+
+    def save(self, **kwargs):
+        self.validated_data['author'] = self.context['author']
+        print(self.context['request'], '+' * 90)
+        return super().save(**kwargs)
+
+    class Meta:
+        model = Video
+        fields = ('id', 'title', 'video', 'preview', 'description', 'author')
