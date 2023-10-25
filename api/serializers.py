@@ -28,7 +28,6 @@ class VideoSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         self.validated_data['author'] = self.context['author']
-        print(self.context['request'], '+' * 90)
         return super().save(**kwargs)
 
     class Meta:
