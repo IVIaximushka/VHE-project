@@ -1,9 +1,11 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+import json
 
-from api.serializers import VideoSerializer, UserProfileSerializer
-from web.models import Video, UserProfile
+from api.serializers import VideoSerializer, UserProfileSerializer, UserSerializer, GenreSerializer
+from web.models import Video, UserProfile, Genre
 
 
 @api_view(['GET'])
@@ -31,3 +33,17 @@ def user_profile_view(request):
     profile = UserProfile.objects.filter(user=request.user).select_related('user')
     serializer = UserProfileSerializer(profile, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([])
+def create_user_profile_view(request):
+    user_serializer = UserSerializer(data=request.data)
+    user_serializer.is_valid(raise_exception=True)
+    user = user_serializer.create(request.data)
+    serializer = UserProfileSerializer(data=request.data,
+                                       context={'request': request,
+                                                'user': user})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)

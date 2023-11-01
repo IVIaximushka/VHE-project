@@ -3,17 +3,31 @@ from rest_framework import serializers
 from web.models import User, UserProfile, Genre, Video
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.CharField()
+    password = serializers.CharField()
+
+    def create(self, validated_data):
+        user = User(
+            username=self.validated_data['username'],
+            email=self.validated_data['email']
+        )
+        user.set_password(self.validated_data['password'])
+        user.save()
+        return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    def save(self, **kwargs):
+        self.validated_data['user'] = self.context['user']
+        return super().save(**kwargs)
+
     class Meta:
-        model = User
-        fields = ('id', 'username')
-
-
-class UserProfileSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    user = UserSerializer()
-    avatar = serializers.ImageField()
-    is_author = serializers.BooleanField()
+        model = UserProfile
+        fields = ('id', 'avatar', 'is_author', 'user')
 
 
 class GenreSerializer(serializers.ModelSerializer):
