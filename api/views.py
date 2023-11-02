@@ -6,8 +6,8 @@ import json
 
 from rest_framework.viewsets import ModelViewSet
 
-from api.serializers import VideoSerializer, UserProfileSerializer, UserSerializer, GenreSerializer
-from web.models import Video, UserProfile, Genre
+from api.serializers import VideoSerializer, UserProfileSerializer, UserSerializer, GenreSerializer, ChatSerializer
+from web.models import Video, UserProfile, Genre, Chat
 
 
 @api_view(['GET'])
@@ -71,6 +71,21 @@ class GenreModelViewSet(ModelViewSet):
         return Genre.objects.all()
 
 
+class ChatModelViewSet(ModelViewSet):
+    serializer_class = ChatSerializer
+
+    def get_queryset(self):
+        return Chat.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request,
+                                                    'admin': request.user.id})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 class VideoModelViewSet(ModelViewSet):
     serializer_class = VideoSerializer
 
@@ -83,11 +98,4 @@ class VideoModelViewSet(ModelViewSet):
                                                     'author': UserProfile.objects.filter(user=request.user).first()})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.serializer_class(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

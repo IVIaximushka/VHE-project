@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.models import User, UserProfile, Genre, Video
+from web.models import User, UserProfile, Genre, Video, Chat
 
 
 class UserSerializer(serializers.Serializer):
@@ -34,6 +34,17 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ('id', 'title')
+
+
+class ChatSerializer(serializers.ModelSerializer):
+    def save(self, **kwargs):
+        if self.instance is None:
+            self.validated_data['admin_id'] = self.context['admin']
+        return super().save(**kwargs)
+
+    class Meta:
+        model = Chat
+        fields = ('id', 'title', 'admin_id')
 
 
 class VideoSerializer(serializers.ModelSerializer):
