@@ -41,7 +41,8 @@ class VideoSerializer(serializers.ModelSerializer):
     # genre = GenreSerializer()
 
     def save(self, **kwargs):
-        self.validated_data['author'] = self.context['author']
+        if self.instance is None:
+            self.validated_data['author'] = self.context['author']
         return super().save(**kwargs)
 
     class Meta:

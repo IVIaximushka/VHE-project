@@ -16,18 +16,18 @@ def start_view(request):
     return Response({'status': 'ok'})
 
 
-@api_view(['GET', 'POST'])
-def video_view(request):
-    if request.method == 'POST':
-        serializer = VideoSerializer(data=request.data,
-                                     context={'request': request,
-                                              'author': UserProfile.objects.filter(user=request.user).first()})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    videos = Video.objects.all().select_related('author__user', 'genre')
-    serializer = VideoSerializer(videos, many=True)
-    return Response(serializer.data)
+# @api_view(['GET', 'POST'])
+# def video_view(request):
+#     if request.method == 'POST':
+#         serializer = VideoSerializer(data=request.data,
+#                                      context={'request': request,
+#                                               'author': UserProfile.objects.filter(user=request.user).first()})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     videos = Video.objects.all().select_related('author__user', 'genre')
+#     serializer = VideoSerializer(videos, many=True)
+#     return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -69,3 +69,25 @@ class GenreModelViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Genre.objects.all()
+
+
+class VideoModelViewSet(ModelViewSet):
+    serializer_class = VideoSerializer
+
+    def get_queryset(self):
+        return Video.objects.select_related('author__user').all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request,
+                                                    'author': UserProfile.objects.filter(user=request.user).first()})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.serializer_class(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
