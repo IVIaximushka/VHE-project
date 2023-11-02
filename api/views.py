@@ -4,6 +4,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 import json
 
+from rest_framework.viewsets import ModelViewSet
+
 from api.serializers import VideoSerializer, UserProfileSerializer, UserSerializer, GenreSerializer
 from web.models import Video, UserProfile, Genre
 
@@ -49,14 +51,21 @@ def create_user_profile_view(request):
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET', 'POST'])
-def genre_view(request):
-    if request.method == 'POST':
-        serializer = GenreSerializer(data=request.data,
-                                     context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    genres = Genre.objects.all()
-    serializer = GenreSerializer(genres, many=True)
-    return Response(serializer.data)
+# @api_view(['GET', 'POST'])
+# def genre_view(request):
+#     if request.method == 'POST':
+#         serializer = GenreSerializer(data=request.data,
+#                                      context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     genres = Genre.objects.all()
+#     serializer = GenreSerializer(genres, many=True)
+#     return Response(serializer.data)
+
+
+class GenreModelViewSet(ModelViewSet):
+    serializer_class = GenreSerializer
+
+    def get_queryset(self):
+        return Genre.objects.all()
