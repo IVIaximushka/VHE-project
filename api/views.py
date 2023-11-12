@@ -1,8 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-import json
 
 from rest_framework.viewsets import ModelViewSet
 
