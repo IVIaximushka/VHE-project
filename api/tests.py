@@ -3,15 +3,16 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 
-from web.models import Genre, User, UserProfile
+from web.models import Genre, User, UserProfile, Chat
 
 
-class GenreTests(APITestCase):
+class Tests(APITestCase):
     def setUp(self) -> None:
         self.user = User.objects.create(username='max', password='123',
                                         email='t@t.ru', is_active=True)
         self.user_profile = UserProfile.objects.create(user=self.user, is_author=True)
         self.genre = Genre.objects.create(title='genre1')
+        self.chat = Chat.objects.create(admin=self.user, title='chat')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
 
@@ -55,4 +56,31 @@ class GenreTests(APITestCase):
         response = self.client.get(reverse('profile'),
                                    headers={'Authorization': f'Token {self.token.key}'})
         self.assertEqual(UserProfile.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_chat_create(self):
+        response = self.client.post(reverse('chat-list'),
+                                    headers={'Authorization': f'Token {self.token.key}'},
+                                    data={'title': 'test_chat'})
+        self.assertEqual(Chat.objects.count(), 2)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_chat_list(self):
+        response = self.client.get(reverse('chat-list'),
+                                   headers={'Authorization': f'Token {self.token.key}'})
+        self.assertEqual(Chat.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_chat_delete(self):
+        response = self.client.delete(reverse('chat-detail', kwargs={'pk': self.chat.id}),
+                                      headers={'Authorization': f'Token {self.token.key}'})
+        self.assertEqual(Chat.objects.count(), 0)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_chat_update(self):
+        response = self.client.put(reverse('chat-detail', kwargs={'pk': self.chat.id}),
+                                   headers={'Authorization': f'Token {self.token.key}'},
+                                   data={'title': 'new_title'})
+        self.assertEqual(Chat.objects.count(), 1)
+        self.assertEqual(Chat.objects.get(id=self.chat.id).title, 'new_title')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
