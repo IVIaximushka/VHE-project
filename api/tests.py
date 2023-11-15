@@ -1,18 +1,19 @@
+import mock
+
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
+from django.core.files import File
 
-from web.models import Genre, User, UserProfile, Chat
+from web.models import Genre, User, UserProfile, Chat, Video
 
 
-class Tests(APITestCase):
+class GenreTests(APITestCase):
     def setUp(self) -> None:
         self.user = User.objects.create(username='max', password='123',
                                         email='t@t.ru', is_active=True)
-        self.user_profile = UserProfile.objects.create(user=self.user, is_author=True)
         self.genre = Genre.objects.create(title='genre1')
-        self.chat = Chat.objects.create(admin=self.user, title='chat')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
 
@@ -43,6 +44,15 @@ class Tests(APITestCase):
         self.assertEqual(Genre.objects.get(id=self.genre.id).title, 'new_title')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+class UserProfileTests(APITestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(username='max', password='123',
+                                        email='t@t.ru', is_active=True)
+        self.user_profile = UserProfile.objects.create(user=self.user, is_author=True)
+        self.token = Token.objects.create(user=self.user)
+        self.token.save()
+
     def test_user_profile_create(self):
         response = self.client.post(reverse('create_profile'),
                                     data={'username': 'test',
@@ -57,6 +67,15 @@ class Tests(APITestCase):
                                    headers={'Authorization': f'Token {self.token.key}'})
         self.assertEqual(UserProfile.objects.count(), 1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class ChatTests(APITestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(username='max', password='123',
+                                        email='t@t.ru', is_active=True)
+        self.chat = Chat.objects.create(admin=self.user, title='chat')
+        self.token = Token.objects.create(user=self.user)
+        self.token.save()
 
     def test_chat_create(self):
         response = self.client.post(reverse('chat-list'),
@@ -83,4 +102,52 @@ class Tests(APITestCase):
                                    data={'title': 'new_title'})
         self.assertEqual(Chat.objects.count(), 1)
         self.assertEqual(Chat.objects.get(id=self.chat.id).title, 'new_title')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class VideoTests(APITestCase):
+    def setUp(self) -> None:
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.mp4'
+
+        self.user = User.objects.create(username='max', password='123',
+                                        email='t@t.ru', is_active=True)
+        self.user_profile = UserProfile.objects.create(user=self.user, is_author=True)
+        self.genre = Genre.objects.create(title='genre1')
+        self.video = Video.objects.create(title='test', video=file_mock.name,
+                                          author=self.user_profile, genre=self.genre)
+        self.token = Token.objects.create(user=self.user)
+        self.token.save()
+
+    def test_video_list(self):
+        response = self.client.get(reverse('video-list'),
+                                   headers={'Authorization': f'Token {self.token.key}'})
+        self.assertEqual(Video.objects.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_video_create(self):
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'video.mp4'
+        response = self.client.post(reverse('video-list'),
+                                    headers={'Authorization': f'Token {self.token.key}'},
+                                    data={'title': 'video', 'video': file_mock,
+                                          'author': self.user_profile, 'genre': self.genre})
+        self.assertEqual(Video.objects.count(), 2)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_video_delete(self):
+        response = self.client.delete(reverse('video-detail', kwargs={'pk': self.video.id}),
+                                      headers={'Authorization': f'Token {self.token.key}'})
+        self.assertEqual(Video.objects.count(), 0)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_video_update(self):
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'video.mp4'
+        response = self.client.put(reverse('video-detail', kwargs={'pk': self.video.id}),
+                                   headers={'Authorization': f'Token {self.token.key}'},
+                                   data={'title': 'new_title',
+                                         'video': file_mock})
+        self.assertEqual(Video.objects.count(), 1)
+        self.assertEqual(Video.objects.get(id=self.video.id).title, 'new_title')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

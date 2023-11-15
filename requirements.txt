@@ -5,3 +5,4 @@ channels==4.0.0
 daphne==4.0.0
 channels-redis==4.1.0
 djangorestframework==3.14.0
+mock==5.1.0
